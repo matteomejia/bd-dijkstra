@@ -1,32 +1,37 @@
 import sys
 
+graph = {}
+
 for line in sys.stdin:
-    line = line.strip().split()
+    line = line.rstrip().split(' ')
+    
+    node = line[0]
+    idx = int(node)
 
-    source = line[0]
-    distance = line[1]
+    graph[idx] = {
+        'dist': int(line[1]),
+        'neighbors': None,
+        'path': node
+    }
 
-    neighbors = 0
     if len(line) > 2:
-        neighbors = line[2]
-    
-    path = source
-    
+        graph[idx]['neighbors'] = line[2]
+
     if len(line) > 3:
-        path = line[3]
-        elements = path.split('->')
-        if elements[len(elements) - 1] !+ source:
-            path = line[3] + '->' + source
-    print(source + ' node ' + str(distance) + ' ' + neighbors + ' ' + str(path))
+        graph[idx]['path'] = line[3]
+        elements = graph[idx]['path'].split('->')
+        if elements[len(elements) - 1] != node:
+            graph[idx]['path'] = graph[idx]['path'] + '->' + node
 
-    if neighbors:
-        adj_list = neighbors.split(':')
-        for i in range(len(adj_list) - 1):
-            neighbor_data = adj_list[i].split(',')
-            neighbor = neighbor_data[0]
-            curr_path = path + '->' + neighbor
-            neighbor_dist = distance + int(neighbor_data[1])
-            print(neighbor + ' value ' + str(neighbor_dist) + ' ' + curr_path)
+    print("('{}', 'A', '{}', '{}', '{}')".format(node, graph[idx]['dist'], graph[idx]['neighbors'], graph[idx]['path']))
 
-    
 
+    if len(graph[idx]['neighbors']):
+        elems = graph[idx]['neighbors'].split(':')
+        for i in range(len(elems) - 1):
+            elem = elems[i].split(',')
+            neighbor = elem[0]
+            weight = elem[1]
+            curr_path = graph[idx]['path'] + '->' + neighbor
+            new_dist = graph[idx]['dist'] + int(weight)
+            print("('{}', 'B', '{}', '{}')".format(neighbor, new_dist, curr_path))

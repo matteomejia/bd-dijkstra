@@ -1,34 +1,37 @@
 import sys
-import math
 
-min_dist = math.inf
-curr_min_node = None
-neighbors = None
-curr_node = None
-
-def emit(path):
-    print(str(curr_node) + ' ' + str(min_dist) + ' ' + neighbors + ' ' + path)
+data = {
+    'min_dist': 1000,
+    'curr_node': None,
+    'curr_min_node': None,
+    'neighbors': None
+}
 
 for line in sys.stdin:
-    line = line.strip().split()
-    source = int(line[0])
-    obj_type = line[1]
-    dist = int(line[2])
+    line = eval(line.strip())
 
-    if obj_type == 'node':
-        if curr_node:
-            if curr_min_node:
-                curr_min_node = source
-            emit(path)
+    line_type = line[1]
+    node = line[0]
+    distance = int(line[2])
+
+    if line_type == 'A':
+        if data['curr_node']:
+            if not data['curr_min_node']:
+                data['curr_min_node'] = node
+            print("{} {} {} {}".format(data['curr_node'], data['min_dist'], data['neighbors'], path))
+
+        data['neighbors'] = line[3]
         path = line[4]
-        neighbors = line[3]
-        curr_node = source
-        min_dist = dist
-        curr_min_node = source
-    else:
-        if dist < min_dist:
-            min_dist = dist
-            curr_min_node = source
+
+        data['curr_node'] = node
+        data['min_dist'] = distance
+        data['curr_min_node'] = node
+
+    elif line_type == 'B':
+        if distance < data['min_dist']:
+            data['min_dist'] = distance
+            data['curr_min_node'] = node
             path = line[3]
 
-emit(path)
+
+print("{} {} {} {}".format(data['curr_node'], data['min_dist'], data['neighbors'], path))
