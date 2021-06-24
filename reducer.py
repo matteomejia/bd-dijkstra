@@ -8,15 +8,15 @@ data = {
 }
 
 for line in sys.stdin:
-    line = eval(line.strip())
+    line = line.rstrip().split(' ')
 
     line_type = line[1]
-    node = line[0]
+    node = int(line[0])
     distance = int(line[2])
 
     if line_type == 'A':
-        if data['curr_node']:
-            if not data['curr_min_node']:
+        if data['curr_node'] is not None:
+            if data['curr_min_node'] is None:
                 data['curr_min_node'] = node
             print("{} {} {} {}".format(data['curr_node'], data['min_dist'], data['neighbors'], path))
 
@@ -24,8 +24,8 @@ for line in sys.stdin:
         path = line[4]
 
         data['curr_node'] = node
-        data['min_dist'] = distance
         data['curr_min_node'] = node
+        data['min_dist'] = distance
 
     elif line_type == 'B':
         if distance < data['min_dist']:

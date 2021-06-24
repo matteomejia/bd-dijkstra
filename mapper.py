@@ -5,8 +5,11 @@ graph = {}
 for line in sys.stdin:
     line = line.rstrip().split(' ')
     
-    node = line[0]
-    idx = int(node)
+    try:
+        node = line[0]
+        idx = int(node)
+    except:
+        continue
 
     graph[idx] = {
         'dist': int(line[1]),
@@ -23,7 +26,7 @@ for line in sys.stdin:
         if elements[len(elements) - 1] != node:
             graph[idx]['path'] = graph[idx]['path'] + '->' + node
 
-    print("('{}', 'A', '{}', '{}', '{}')".format(node, graph[idx]['dist'], graph[idx]['neighbors'], graph[idx]['path']))
+    print("{} A {} {} {}".format(node, graph[idx]['dist'], graph[idx]['neighbors'], graph[idx]['path']))
 
 
     if len(graph[idx]['neighbors']):
@@ -34,4 +37,4 @@ for line in sys.stdin:
             weight = elem[1]
             curr_path = graph[idx]['path'] + '->' + neighbor
             new_dist = graph[idx]['dist'] + int(weight)
-            print("('{}', 'B', '{}', '{}')".format(neighbor, new_dist, curr_path))
+            print("{} B {} {}".format(neighbor, new_dist, curr_path))
